@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "ruleset_name": "Starter arena abilities",
+  "description": "Custom, simplified turn-based simulator rules. These ability effects, multipliers, ranges, and costs are design assumptions, not official Genshin Impact values. Base HP, ATK, DEF, roles, element, and weapon are read from the supplied CSV.",
+  "units": {
+    "time": "Turns",
+    "range_cells": "Manhattan grid distance: abs(x1-x2) + abs(y1-y2).",
+    "targets": "enemy selects one living opponent; ally selects one living teammate and may include the caster; self selects only the caster.",
+    "multiplier": "Multiply the caster's named scaling_stat by this value. Damage is a raw amount before the future battle engine applies defense and environmental effects.",
+    "healing": "Healing restores missing HP, up to the target's maximum HP.",
+    "shields": "Shield points absorb incoming damage before HP. A new shield replaces an existing shield only when stronger; shields do not add together.",
+    "buffs": "bonus_fraction is a proportional bonus to the target's named base stat: 0.30 means +30%. Keep the strongest active bonus per stat; bonuses do not add together.",
+    "durations": "A duration D applied on turn T remains active through turn T+D-1 and expires at the start of T+D. A duration of 0 is an immediate effect.",
+    "cooldowns": "An ability with cooldown C used on turn T is next available on turn T+C; a character still has only one action per turn.",
+    "energy": "On successful activation, subtract energy_cost and then add energy_gain, capped at maximum_energy. The caster must already have enough energy to pay the cost.",
+    "battle_resolution": "These definitions are inputs to the future battle engine. They do not execute attacks, resolve simultaneous actions, or determine winners."
+  },
+  "rules": {
+    "maximum_energy": 100,
+    "starting_energy": 20,
+    "starting_shield": 0
+  },
+  "ability_defaults": {
+    "normal_attack": {"cooldown_turns": 0, "energy_cost": 0, "energy_gain": 10, "duration_turns": 0},
+    "skill": {"cooldown_turns": 3, "energy_cost": 0, "energy_gain": 15, "duration_turns": 0},
+    "burst": {"cooldown_turns": 5, "energy_cost": 60, "energy_gain": 0, "duration_turns": 0}
+  },
+  "characters": {
+    "noelle": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic strike", "effect_type": "damage", "target": "enemy", "range_cells": 1, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Defensive shield", "effect_type": "shield", "target": "ally", "range_cells": 2, "scaling_stat": "lvl_90_DEF", "multiplier": 3.0, "duration_turns": 2},
+      "burst": {"name": "Recovery", "effect_type": "heal", "target": "ally", "range_cells": 3, "scaling_stat": "lvl_90_HP", "multiplier": 0.25}
+    },
+    "gorou": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic shot", "effect_type": "damage", "target": "enemy", "range_cells": 4, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Defense support", "effect_type": "buff", "target": "ally", "range_cells": 3, "buff_stat": "lvl_90_DEF", "bonus_fraction": 0.30, "duration_turns": 3},
+      "burst": {"name": "Attack support", "effect_type": "buff", "target": "ally", "range_cells": 3, "buff_stat": "lvl_90_ATK", "bonus_fraction": 0.40, "duration_turns": 3}
+    },
+    "diona": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic shot", "effect_type": "damage", "target": "enemy", "range_cells": 4, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Protective shield", "effect_type": "shield", "target": "ally", "range_cells": 3, "scaling_stat": "lvl_90_HP", "multiplier": 0.15, "duration_turns": 2},
+      "burst": {"name": "Restoration", "effect_type": "heal", "target": "ally", "range_cells": 3, "scaling_stat": "lvl_90_HP", "multiplier": 0.30}
+    },
+    "bennett": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic strike", "effect_type": "damage", "target": "enemy", "range_cells": 1, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Quick aid", "effect_type": "heal", "target": "ally", "range_cells": 2, "scaling_stat": "lvl_90_HP", "multiplier": 0.12},
+      "burst": {"name": "Attack encouragement", "effect_type": "buff", "target": "ally", "range_cells": 3, "buff_stat": "lvl_90_ATK", "bonus_fraction": 0.35, "duration_turns": 3}
+    },
+    "xiangling": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic thrust", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Fire strike", "effect_type": "damage", "target": "enemy", "range_cells": 3, "element": "Pyro", "scaling_stat": "lvl_90_ATK", "multiplier": 5.0},
+      "burst": {"name": "Fire surge", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Pyro", "scaling_stat": "lvl_90_ATK", "multiplier": 9.0}
+    },
+    "raiden_shogun": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic thrust", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Electro strike", "effect_type": "damage", "target": "enemy", "range_cells": 3, "element": "Electro", "scaling_stat": "lvl_90_ATK", "multiplier": 4.5},
+      "burst": {"name": "Electro surge", "effect_type": "damage", "target": "enemy", "range_cells": 3, "element": "Electro", "scaling_stat": "lvl_90_ATK", "multiplier": 10.0, "energy_cost": 80}
+    },
+    "arlecchino": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic thrust", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Flame strike", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Pyro", "scaling_stat": "lvl_90_ATK", "multiplier": 5.0},
+      "burst": {"name": "Flame surge", "effect_type": "damage", "target": "enemy", "range_cells": 2, "element": "Pyro", "scaling_stat": "lvl_90_ATK", "multiplier": 9.0}
+    },
+    "furina": {
+      "movement_range": 2,
+      "normal_attack": {"name": "Basic strike", "effect_type": "damage", "target": "enemy", "range_cells": 1, "element": "Physical", "scaling_stat": "lvl_90_ATK", "multiplier": 3.0},
+      "skill": {"name": "Hydro strike", "effect_type": "damage", "target": "enemy", "range_cells": 3, "element": "Hydro", "scaling_stat": "lvl_90_HP", "multiplier": 0.09},
+      "burst": {"name": "Healing support", "effect_type": "heal", "target": "ally", "range_cells": 3, "scaling_stat": "lvl_90_HP", "multiplier": 0.25}
+    }
+  }
+}

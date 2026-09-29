@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "description": "Custom starter synergy rules for the arena simulator. Scores and bonuses are design assumptions, not official Genshin Impact values.",
+  "role_coverage": {
+    "required_flags": ["role_dps", "role_support", "role_survivability"],
+    "score": 15,
+    "minimum_team_size": 2,
+    "description": "A multi-character team covering damage, support, and survivability earns a balanced-composition score."
+  },
+  "pairs": [
+    {
+      "characters": ["bennett", "xiangling"],
+      "score": 55,
+      "description": "Bennett strengthens Xiangling's sustained Pyro offense.",
+      "effects": {"atk_bonus": 0.10, "element_damage_bonus": {"Pyro": 0.10}}
+    },
+    {
+      "characters": ["noelle", "gorou"],
+      "score": 50,
+      "description": "Gorou reinforces Noelle's DEF-based protection.",
+      "effects": {"def_bonus": 0.15, "shield_bonus": 0.20}
+    },
+    {
+      "characters": ["raiden_shogun", "xiangling"],
+      "score": 35,
+      "description": "Raiden improves the team's energy cycle.",
+      "effects": {"energy_gain_bonus": 0.20},
+      "inactive_events": ["energy_blackout"]
+    },
+    {
+      "characters": ["furina", "arlecchino"],
+      "score": 30,
+      "description": "Hydro and Pyro sequencing strengthens reaction damage.",
+      "effects": {"reaction_damage_bonus": 0.10},
+      "requires_reactions": true
+    },
+    {
+      "characters": ["diona", "noelle"],
+      "score": 25,
+      "description": "Two defensive specialists improve shields and recovery.",
+      "effects": {"shield_bonus": 0.10, "healing_bonus": 0.10},
+      "suppressed_effects": {"shield_nullification": ["shield_bonus"]}
+    }
+  ]
+}
